@@ -26,6 +26,5 @@
     "^@/icons/(.*)$",
     "^@/styles/(.*)$",
     "^[./]"
-  ],
-  "tailwindConfig": "./tailwind.config.js"
+  ]
 }
