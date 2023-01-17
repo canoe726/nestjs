@@ -1,7 +1,7 @@
 import { Repository } from "typeorm";
 import { Board } from "./board.entity";
 import { BoardStatus } from "./board-status";
-import { CustomRepository } from "./configs/typeorm-ex.decorator";
+import { CustomRepository } from "../configs/typeorm-ex.decorator";
 import { CreateBoardDto } from "./dto/create-board.dto";
 
 /**

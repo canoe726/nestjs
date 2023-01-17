@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { Board } from "./board-status";
 import { BoardsService } from "./boards.service";
 import { CreateBoardDto } from "./dto/create-board.dto";
 
 @Controller('/boards')
+@UseGuards(AuthGuard())
 export class BoardsController {
     // DI
     constructor(private boardsService: BoardsService) {}
