@@ -9,6 +9,7 @@
   "bracketSpacing": true,
   "bracketSameLine": false,
   "arrowParens": "always",
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
   "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrder": [
