@@ -1,3 +1,5 @@
+import { HTTPStatusCodeInfoMap } from 'src/constants/HTTP.const'
+import { HTTPResponse } from 'src/interfaces/HTTP.type'
 import { Repository } from 'typeorm'
 
 import { CustomRepository } from '../configs/typeorm-ex.decorator'
@@ -13,7 +15,6 @@ import { CreateBoardDto } from './dto/create-board.dto'
 @CustomRepository(Board)
 export class BoardRepository extends Repository<Board> {
   async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    console.log('boardRepository : ', createBoardDto)
     const { title, description } = createBoardDto
 
     const board = this.create({

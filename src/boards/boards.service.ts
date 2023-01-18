@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import { HTTPStatusCodeInfoMap } from 'src/constants/HTTP.const'
+import { HTTPResponse } from 'src/interfaces/HTTP.type'
 
 import { Board, BoardStatus } from './board-status'
 import { BoardRepository } from './board.repository'
@@ -12,13 +14,25 @@ export class BoardsService {
   //     return this.boards;
   // }
 
-  async getBoardById(id: any): Promise<Board> {
-    const found = await this.boardRepository.findOne(id)
+  async getBoardById(id: number): Promise<HTTPResponse<Board, null>> {
+    const statusCode = 200
+    const { error, message } = HTTPStatusCodeInfoMap[statusCode]
 
+    const found = await this.boardRepository.findOneBy({ id })
+
+    // TODO: https://jakekwak.gitbook.io/nestjs/overview/untitled
     if (!found) {
       throw new NotFoundException(`Can't find Board with id ${id}`)
     }
-    return found
+
+    return {
+      data: found,
+      statusCode,
+      error,
+      message,
+      timestamp: new Date(Date.now()).toLocaleString(),
+      meta: null,
+    }
   }
 
   // getBoardById(id: string): Board {

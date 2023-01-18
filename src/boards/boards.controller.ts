@@ -9,13 +9,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
+import { HTTPResponse } from 'src/interfaces/HTTP.type'
 
 import { Board } from './board-status'
 import { BoardsService } from './boards.service'
 import { CreateBoardDto } from './dto/create-board.dto'
 
 @Controller('/boards')
-@UseGuards(AuthGuard())
+// @UseGuards(AuthGuard())
 export class BoardsController {
   // DI
   constructor(private boardsService: BoardsService) {}
@@ -27,7 +28,7 @@ export class BoardsController {
   // }
 
   @Get('/:id')
-  getBoardById(@Param('id') id: number): Promise<Board> {
+  getBoardById(@Param('id') id: number): Promise<HTTPResponse<Board, null>> {
     return this.boardsService.getBoardById(id)
   }
 
