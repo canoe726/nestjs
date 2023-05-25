@@ -1,84 +1,46 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { HTTPStatusCodeInfoMap } from 'src/constants/HTTP.const'
-import { HTTPResponse } from 'src/interfaces/HTTP.type'
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 
-import { Board, BoardStatus } from './board-status'
-import { BoardRepository } from './board.repository'
-import { CreateBoardDto } from './dto/create-board.dto'
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board } from './board.entity';
+import { BoardRepository } from './board.repository';
+import { CreateBoardDto } from './dto/create-board.dto';
 
 @Injectable()
 export class BoardsService {
-  constructor(private boardRepository: BoardRepository) {}
+  constructor(
+    @InjectRepository(BoardRepository)
+    private boardRepository: BoardRepository
+  ) {}
 
-  // getAllBoards(): Board[] {
-  //     return this.boards;
-  // }
+  async getAllBoard(): Promise<Board[]> {
+    const boardList = await this.boardRepository.find();
 
-  async getBoardById(id: number): Promise<HTTPResponse<Board, null>> {
-    const statusCode = 200
-    const { error, message } = HTTPStatusCodeInfoMap[statusCode]
+    if (!boardList) {
+      throw new NotFoundException(`Can't find Board table`)
+    }
 
-    const found = await this.boardRepository.findOneBy({ id })
+    return boardList
+  }
 
-    // TODO: https://jakekwak.gitbook.io/nestjs/overview/untitled
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOne({
+      where: { id }
+    });
+
     if (!found) {
       throw new NotFoundException(`Can't find Board with id ${id}`)
     }
 
-    return {
-      data: found,
-      statusCode,
-      error,
-      message,
-      timestamp: new Date(Date.now()).toLocaleString(),
-      meta: null,
-    }
+    return found
   }
-
-  // getBoardById(id: string): Board {
-  //     return this.boards.find((board) => board.id === id)
-  // }
 
   async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    const { title, description } = createBoardDto
-    console.log('boardRepository : ', this.boardRepository)
-    const board = this.boardRepository.create({
-      title,
-      description,
-      status: BoardStatus.PUBLIC,
-    })
+    const createdBoard = await this.boardRepository.createBoard(createBoardDto);
 
-    await this.boardRepository.save(board)
-    return board
+    if (!createdBoard) {
+      throw new NotAcceptableException(`Can't create Board with id ${createBoardDto}`)
+    }
+
+    return createdBoard
   }
-
-  // createBoard(createBoardDto: CreateBoardDto) {
-  //     const { title, description } = createBoardDto
-
-  //     const board: Board = {
-  //         id: uuid(),
-  //         title,
-  //         description,
-  //         status: BoardStatus.PUBLIC,
-  //     }
-
-  //     this.boards.push(board);
-  //     return board
-  // }
-
-  // updateBoardStatus(id: string, status: BoardStatus): Board {
-  //     const board = this.getBoardById(id)
-
-  //     if (board) {
-  //         board.status = status
-  //         return board;
-  //     } else {
-  //         return null
-  //     }
-  // }
-
-  // deleteBoard(id: string): void {
-  //     const found = this.getBoardById(id);
-  //     this.boards = this.boards.filter((board) => board.id !== found.id)
-  // }
 }

@@ -3,7 +3,7 @@ import { HTTPResponse } from 'src/interfaces/HTTP.type'
 import { Repository } from 'typeorm'
 
 import { CustomRepository } from '../configs/typeorm-ex.decorator'
-import { BoardStatus } from './board-status'
+import { BoardStatus } from './board-status.enum'
 import { Board } from './board.entity'
 import { CreateBoardDto } from './dto/create-board.dto'
 
