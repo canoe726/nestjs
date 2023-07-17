@@ -1,4 +1,4 @@
-import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
@@ -35,12 +35,14 @@ export class BoardsService {
   }
 
   async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    const createdBoard = await this.boardRepository.createBoard(createBoardDto);
+    return this.boardRepository.createBoard(createBoardDto)
+  }
 
-    if (!createdBoard) {
-      throw new NotAcceptableException(`Can't create Board with id ${createBoardDto}`)
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id)
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Can't find Board with id ${id}`)
     }
-
-    return createdBoard
   }
 }
