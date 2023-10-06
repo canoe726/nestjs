@@ -8,6 +8,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   )
+
+  console.log('__dirname : ', __dirname)
   await app.listen(3000, '0.0.0.0')
 }
 bootstrap()
